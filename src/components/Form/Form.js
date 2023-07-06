@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import css from '../Form/Form.module.css';
-import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from 'redux/contactsSlice';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Form = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.contacts);
 
   const handleChange = event => {
     const { name, value } = event.target;
@@ -28,8 +30,21 @@ export const Form = () => {
 
   const handleSubmit = event => {
     event.preventDefault();
+    const names = contacts.map(contact => contact.name);
+    const numbers = contacts.map(contact => contact.number);
+    const newContact = { name: name, number: number };
 
-    dispatch(addContact({ name, number }));
+    if (names.includes(name)) {
+      toast.error(`${name} is already in contacts`);
+    } else if (numbers.includes(number)) {
+      toast.error(`${number} is already in contacts`);
+    } else {
+      dispatch(addContact(newContact));
+      reset();
+    }
+  };
+
+  const reset = () => {
     setName('');
     setNumber('');
   };
@@ -65,8 +80,4 @@ export const Form = () => {
       <button className={css.button}>Add contact</button>
     </form>
   );
-};
-
-Form.propTypes = {
-  onAddContact: PropTypes.func.isRequired,
 };

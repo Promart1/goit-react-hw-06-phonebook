@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import css from '../Filter/Filter.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFilter } from 'redux/selectors';
@@ -8,6 +7,7 @@ import { setFilter } from 'redux/filterSlice';
 export const Filter = () => {
   const dispatch = useDispatch();
   const filter = useSelector(getFilter);
+
   return (
     <label className={css.label}>
       Filter contacts by name:
@@ -20,8 +20,4 @@ export const Filter = () => {
       />
     </label>
   );
-};
-
-Filter.propTypes = {
-  value: PropTypes.string.isRequired,
 };
